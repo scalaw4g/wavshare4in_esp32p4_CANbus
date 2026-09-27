@@ -26,7 +26,10 @@ For canbus integration, I have added a few CAN protocols(haltech, hondata, etc).
 You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for 9$.  With it, you can ignore any other sensor wiring.  If you need help with wiring those two wires, again join the discord.
 
 <br>
-*****
+<img width="3024" height="4032" alt="IMG_2690" src="https://github.com/user-attachments/assets/ff5cb604-1f43-4a8b-be12-6aa4c8036f45" />
+<img width="3024" height="4032" alt="IMG_2691" src="https://github.com/user-attachments/assets/67dda3b2-fb5f-41d8-b32d-e0fd29233b95" />
+<img width="3024" height="4032" alt="IMG_2689" src="https://github.com/user-attachments/assets/c69a84df-94ed-4d2f-b5ee-1fc4988e1a71" />
+
 <br>At startup, tap **CAN FORWARD** on the boot screen to enter forwarding mode. If it is not tapped within 3.5 seconds, the dashboard starts. In forwarding mode, connect the PC to the board's USB Serial/JTAG port and select a Lawicel/SLCAN serial adapter in SavvyCAN or CANHacker. Set the application bitrate to match the detected CAN bus rate. The firmware streams received standard and extended CAN frames while the adapter is open; it does not run the dashboard or gauge UART outputs.
 
 ## Issues/bug fixes
