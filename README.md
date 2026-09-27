@@ -15,7 +15,6 @@ Youtube Tutorial/playlist: https://youtu.be/t7H6pevep40
 4. Plug in Esp32-P4/screen via usb c
 5. Set target device to esp32p4(see "Description of Bottom Toolbar of VSCode User Interface" in the waveshare link above)
 6. Build 
-
 7. Flash
 <br>
 
@@ -27,21 +26,12 @@ For canbus integration, I have added a few CAN protocols(haltech, hondata, etc).
 You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for 9$.  With it, you can ignore any other sensor wiring.  If you need help with wiring those two wires, again join the discord.
 
 <br>
-Also, the sensor source on line 37 of the main.c file needs to be updated to 
-```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
-
-At startup, tap **CAN FORWARD** on the boot screen to enter forwarding mode. If it is not tapped within 3.5 seconds, the dashboard starts. In forwarding mode, connect the PC to the board's USB Serial/JTAG port and select a Lawicel/SLCAN serial adapter in SavvyCAN or CANHacker. Set the application bitrate to match the detected CAN bus rate. The firmware streams received standard and extended CAN frames while the adapter is open; it does not run the dashboard or gauge UART outputs.
+*****
+<br>At startup, tap **CAN FORWARD** on the boot screen to enter forwarding mode. If it is not tapped within 3.5 seconds, the dashboard starts. In forwarding mode, connect the PC to the board's USB Serial/JTAG port and select a Lawicel/SLCAN serial adapter in SavvyCAN or CANHacker. Set the application bitrate to match the detected CAN bus rate. The firmware streams received standard and extended CAN frames while the adapter is open; it does not run the dashboard or gauge UART outputs.
 
 ## Issues/bug fixes
 
 ### 4in waveshare round screens
-For 4in round screens, the base tach image needs to be updated as the resolution is 720x720 and not 800x800 like the 3.4in screens.
-<br>
-To do that, just replace the ui_img_1656279599.c file in main/tach_ui/images with the file found here: https://drive.google.com/file/d/1_PrP6jOna2s5Ua82ol2qqV2OZWf9c4_l/view?usp=sharing
+this fork is already adapted for the 4in display version
 <br>
 
-### Older boards/revision errors
-
-If you see an error like:  ```A fatal error occurred: bootloader/bootloader.bin requires chip revision in range [v3.1 - v3.99] (this chip is revision v1.3). ```, you need to update the minimum support board with a just a few clicks.
-<br>
-Follow these instructions here: https://discord.com/channels/1474501462905192450/1474502475280154927/1480043568469901459
