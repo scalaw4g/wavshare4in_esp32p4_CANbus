@@ -3,7 +3,7 @@
 #include "../ui.h"
 
 //Base resolution that the project was initially coded for(800x800 round screen)
-#define UI_BASE_RES 800
+#define UI_BASE_RES 720
 #define UI_SCALE(x) ((x) * LV_HOR_RES / UI_BASE_RES)
 
 lv_obj_t *ui_Screen1 = NULL;
@@ -52,6 +52,7 @@ void ui_Screen1_screen_init(void) {
    lv_obj_set_style_arc_opa(ui_rpm_arc, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
    lv_obj_set_style_bg_opa(ui_rpm_arc, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
    lv_obj_set_style_border_opa(ui_rpm_arc, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
+   lv_obj_clear_flag(ui_rpm_arc, LV_OBJ_FLAG_CLICKABLE);
 
    lv_obj_set_style_bg_color(ui_rpm_arc, lv_color_hex(0xFFFFFF), LV_PART_KNOB | LV_STATE_DEFAULT);
    lv_obj_set_style_bg_opa(ui_rpm_arc, 0, LV_PART_KNOB | LV_STATE_DEFAULT);

@@ -19,7 +19,7 @@ typedef struct{
     float oil_pressure;
     float air_fuel_ratio;
     float boost;
-    float fuel_comp
+    float fuel_comp;
 } can_dash_data_t;
 
 
@@ -32,7 +32,8 @@ extern volatile can_dash_data_t can_data;
 // API
 // =======================================================
 
-void canbus_init(void);
+void canbus_init(bool forward_mode);
+void canbus_usb_init(void);
 void canbus_task(void *arg);
 void process_can_frame(uint32_t id, uint8_t *data);
 

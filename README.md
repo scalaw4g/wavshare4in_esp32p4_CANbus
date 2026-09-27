@@ -30,6 +30,8 @@ You will need to purchase a [small can transciever](https://a.co/d/09CiRq2o) for
 Also, the sensor source on line 37 of the main.c file needs to be updated to 
 ```SENSOR_SOURCE_CAN``` as the default for this code is the analog/non-canbus sensors
 
+At startup, tap **CAN FORWARD** on the boot screen to enter forwarding mode. If it is not tapped within 3.5 seconds, the dashboard starts. In forwarding mode, connect the PC to the board's USB Serial/JTAG port and select a Lawicel/SLCAN serial adapter in SavvyCAN or CANHacker. Set the application bitrate to match the detected CAN bus rate. The firmware streams received standard and extended CAN frames while the adapter is open; it does not run the dashboard or gauge UART outputs.
+
 ## Issues/bug fixes
 
 ### 4in waveshare round screens

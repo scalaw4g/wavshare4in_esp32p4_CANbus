@@ -26,7 +26,7 @@ extern lv_obj_t *ui____initial_actions0;
 
 // IMAGES AND IMAGE SETS
 LV_IMG_DECLARE( ui_img_1656279599); 
-LV_IMG_DECLARE( ui_img_sti_logo_png); 
+LV_IMG_DECLARE( ui_scumpunk); 
 
 // FONTS
 LV_FONT_DECLARE( ui_font_DotoLarge);

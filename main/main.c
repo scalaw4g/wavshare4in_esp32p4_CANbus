@@ -25,6 +25,7 @@
 #include "odometer/odometer.h"
 #include "lap_timer.h"
 #include "canbus.h"
+#include "tach_ui/boot/boot_screen.h"
 
 
 // =======================================================
@@ -34,7 +35,7 @@
 #define SENSOR_SOURCE_ANALOG 0
 #define SENSOR_SOURCE_CAN    1
 
-#define SENSOR_SOURCE SENSOR_SOURCE_ANALOG
+#define SENSOR_SOURCE SENSOR_SOURCE_CAN
 // =======================================================
 //-----Pin Assignment---------//
 
@@ -1188,6 +1189,9 @@ static void can_mapping_task(void *arg){
 //------------------------------------------------------------------------//
 
 void app_main(void) {
+    if (SENSOR_SOURCE == SENSOR_SOURCE_CAN)
+        canbus_usb_init();
+
     bsp_display_cfg_t cfg = {
         .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
         .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
@@ -1199,33 +1203,41 @@ void app_main(void) {
         }
     };
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
+    (void)disp;
+    bsp_display_backlight_off();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    bsp_display_brightness_set(50);
 
-    adc_global_init();
     init_label_styles();
-    tach_init();
-    odometer_init();
-
     ui_init();
-    lv_timer_create(gauge_timer, 10, NULL);
+    bool forward_mode = SENSOR_SOURCE == SENSOR_SOURCE_CAN &&
+                        boot_screen_wait_for_forward_mode();
 
-    uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
-    uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE); 
-    uart_init(GPS_UART_NUM, UART_PIN_NO_CHANGE, GPS_RX_PIN, (GPS_BUF_SIZE*2), GPS_BAUD_RATE); 
+    if (!forward_mode) {
+        adc_global_init();
+        tach_init();
+        odometer_init();
+
+        lv_timer_create(gauge_timer, 10, NULL);
+
+        uart_init(UART_PORT, UART_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE);
+        uart_init(UART1_PORT, UART1_TX_PIN, UART_PIN_NO_CHANGE, UART_TX_BUF_SIZE, UART_BAUD_RATE);
+        uart_init(GPS_UART_NUM, UART_PIN_NO_CHANGE, GPS_RX_PIN, (GPS_BUF_SIZE * 2), GPS_BAUD_RATE);
+    }
 
     if (SENSOR_SOURCE == SENSOR_SOURCE_CAN){
-        canbus_init();
-        xTaskCreatePinnedToCore(canbus_task,"can_rx",4096,NULL,10,NULL,0);
-        xTaskCreatePinnedToCore(can_mapping_task,"can_mapping_task",4096,NULL,10,NULL,1);
+        canbus_init(forward_mode);
+        xTaskCreatePinnedToCore(canbus_task, "can_rx", 4096,
+                                (void *)(uintptr_t)forward_mode, 10, NULL, 0);
+        if (!forward_mode)
+            xTaskCreatePinnedToCore(can_mapping_task, "can_mapping_task", 4096, NULL, 10, NULL, 1);
     } else {
         xTaskCreatePinnedToCore(tach_task, "tach_task", 4096, NULL, 10, NULL, 0);
         xTaskCreatePinnedToCore(gps_task, "gps_task", 4096, NULL, 5, NULL, 0);
         xTaskCreatePinnedToCore(adc_task, "adc_uart_task", 4096, NULL, 5, NULL, 0);
     }
 
-    xTaskCreatePinnedToCore(save_miles_task, "save_miles_task", 4096, NULL, 4, NULL, 0);
-
-    bsp_display_backlight_off();
-    vTaskDelay(pdMS_TO_TICKS(100)); 
-    bsp_display_brightness_set(50); 
+    if (!forward_mode)
+        xTaskCreatePinnedToCore(save_miles_task, "save_miles_task", 4096, NULL, 4, NULL, 0);
 
 }
